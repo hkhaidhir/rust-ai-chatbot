@@ -2,8 +2,9 @@ use std::env;
 
 use thiserror::Error;
 
-const DEFAULT_AI_API_URL: &str = "https://api.openai.com/v1/chat/completions";
-const DEFAULT_AI_MODEL: &str = "gpt-4o-mini";
+const DEFAULT_AI_API_URL: &str =
+    "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+const DEFAULT_AI_MODEL: &str = "gemini-3.5-flash-lite";
 const DEFAULT_SYSTEM_PROMPT: &str = "You are a helpful, concise assistant.";
 
 #[derive(Debug, Clone)]
@@ -16,16 +17,16 @@ pub(crate) struct ChatConfig {
 
 #[derive(Debug, Error)]
 pub(crate) enum ChatConfigError {
-    #[error("Missing OPENAI_API_KEY. Copy .env.example to .env and add your API key.")]
-    MissingApiKey,
+    #[error("Missing AI_API_KEY. Copy .env.example to .env and add your provider API key.")]
+    MissingAiApiKey,
 }
 
 impl ChatConfig {
     pub(crate) fn from_environment() -> Result<Self, ChatConfigError> {
-        let api_key = env::var("OPENAI_API_KEY")
+        let api_key = env::var("AI_API_KEY")
             .ok()
             .filter(|value| !value.trim().is_empty())
-            .ok_or(ChatConfigError::MissingApiKey)?;
+            .ok_or(ChatConfigError::MissingAiApiKey)?;
 
         Ok(Self {
             api_key,

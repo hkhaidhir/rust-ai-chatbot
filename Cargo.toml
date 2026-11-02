@@ -2,7 +2,7 @@
 name = "rust-ai-chatbot"
 version = "0.1.0"
 edition = "2024"
-description = "A multi-turn terminal chatbot for OpenAI-compatible APIs"
+description = "A multi-turn terminal chatbot for OpenAI-compatible AI APIs"
 license = "MIT"
 
 [dependencies]

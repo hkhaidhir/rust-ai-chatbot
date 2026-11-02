@@ -1,14 +1,14 @@
+mod ai_chat_client;
 mod chat_config;
 mod conversation;
-mod openai_chat_client;
 mod terminal_chat;
 
 use std::error::Error;
 use std::io::{self, Write};
 
+use ai_chat_client::AiChatClient;
 use chat_config::ChatConfig;
 use conversation::ChatConversation;
-use openai_chat_client::OpenAiChatClient;
 use terminal_chat::{TerminalChatAction, parse_terminal_chat_action};
 
 #[tokio::main]
@@ -16,7 +16,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenvy::dotenv().ok();
 
     let config = ChatConfig::from_environment()?;
-    let chat_client = OpenAiChatClient::new(&config);
+    let chat_client = AiChatClient::new(&config);
     let mut conversation = ChatConversation::new(config.system_prompt);
 
     println!("Rust AI Chatbot ({})", config.model);

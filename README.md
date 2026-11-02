@@ -1,6 +1,6 @@
 # Rust AI Chatbot
 
-A multi-turn terminal chatbot written in Rust. It works with OpenAI and other providers that expose an OpenAI-compatible `/chat/completions` endpoint.
+A provider-neutral, multi-turn terminal chatbot written in Rust. It works with AI providers that expose an OpenAI-compatible `/chat/completions` endpoint and uses Gemini by default.
 
 ## Features
 
@@ -17,10 +17,10 @@ A multi-turn terminal chatbot written in Rust. It works with OpenAI and other pr
    cp .env.example .env
    ```
 
-2. Put your API key in `.env`:
+2. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/app/apikey), then put it in `.env`:
 
    ```dotenv
-   OPENAI_API_KEY=your-api-key-here
+   AI_API_KEY=your-gemini-api-key-here
    ```
 
 3. Start the chatbot:
@@ -39,12 +39,12 @@ A multi-turn terminal chatbot written in Rust. It works with OpenAI and other pr
 
 | Variable | Required | Default |
 | --- | --- | --- |
-| `OPENAI_API_KEY` | Yes | None |
-| `AI_API_URL` | No | `https://api.openai.com/v1/chat/completions` |
-| `AI_MODEL` | No | `gpt-4o-mini` |
+| `AI_API_KEY` | Yes | None |
+| `AI_API_URL` | No | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` |
+| `AI_MODEL` | No | `gemini-2.5-flash` |
 | `AI_SYSTEM_PROMPT` | No | `You are a helpful, concise assistant.` |
 
-For a local OpenAI-compatible server, point `AI_API_URL` at its chat completions endpoint and set `AI_MODEL` to a model it serves. The server must accept bearer authentication; use any non-empty key if your local server ignores the token.
+The default model is subject to Gemini's free-tier quotas and regional availability. To use another OpenAI-compatible provider, change `AI_API_URL`, `AI_MODEL`, and `AI_API_KEY` to the values required by that provider.
 
 ## Verify
 

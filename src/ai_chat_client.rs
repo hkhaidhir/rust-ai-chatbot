@@ -5,7 +5,7 @@ use thiserror::Error;
 use crate::chat_config::ChatConfig;
 use crate::conversation::ChatMessage;
 
-pub(crate) struct OpenAiChatClient {
+pub(crate) struct AiChatClient {
     http_client: Client,
     api_key: String,
     api_url: String,
@@ -13,7 +13,7 @@ pub(crate) struct OpenAiChatClient {
 }
 
 #[derive(Debug, Error)]
-pub(crate) enum OpenAiChatError {
+pub(crate) enum AiChatError {
     #[error("Chat API request failed: {0}")]
     Request(#[from] reqwest::Error),
     #[error("Chat API returned HTTP {status}: {response_body}")]
@@ -43,7 +43,7 @@ struct ChatCompletionChoice {
     message: ChatMessage,
 }
 
-impl OpenAiChatClient {
+impl AiChatClient {
     pub(crate) fn new(config: &ChatConfig) -> Self {
         Self {
             http_client: Client::new(),
@@ -56,7 +56,7 @@ impl OpenAiChatClient {
     pub(crate) async fn create_chat_completion(
         &self,
         messages: &[ChatMessage],
-    ) -> Result<String, OpenAiChatError> {
+    ) -> Result<String, AiChatError> {
         let request = ChatCompletionRequest {
             model: &self.model,
             messages,
@@ -72,7 +72,7 @@ impl OpenAiChatClient {
 
         if !status.is_success() {
             let response_body = response.text().await?;
-            return Err(OpenAiChatError::ApiResponse {
+            return Err(AiChatError::ApiResponse {
                 status,
                 response_body,
             });
@@ -83,12 +83,12 @@ impl OpenAiChatClient {
             .choices
             .into_iter()
             .next()
-            .ok_or(OpenAiChatError::MissingCompletionChoice)?
+            .ok_or(AiChatError::MissingCompletionChoice)?
             .message
             .content;
 
         if assistant_message.trim().is_empty() {
-            return Err(OpenAiChatError::EmptyAssistantMessage);
+            return Err(AiChatError::EmptyAssistantMessage);
         }
 
         Ok(assistant_message)
